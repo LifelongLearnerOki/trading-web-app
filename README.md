@@ -1,6 +1,6 @@
 # Streamlit - Simple Trading Web App
 
-This web app allows you make some simple technical analysis and position size calculation before entering a trade. I came up with the idea by watching YouTube Videos from [Adam Khoo](https://www.youtube.com/watch?v=pFHTccTf3QM&list=PLddKKXhQ4Wv9Qx2OeAdR7QQHmNbGJAs4n&index=1)"). For more details, trading strategies I'd highly recommend checking out Adam's videos.  
+This web app allows you make some simple technical analysis and position size calculation before entering a trade. I came up with the idea by watching YouTube Videos from [Adam Khoo](https://www.youtube.com/watch?v=pFHTccTf3QM&list=PLddKKXhQ4Wv9Qx2OeAdR7QQHmNbGJAs4n&index=1). For more details, trading strategies I'd highly recommend checking out Adam's videos.  
 
 An article write-up on this project including a description of the current as well as upcoming features will be coming soon. 
            
