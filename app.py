@@ -1,17 +1,18 @@
-import matplotlib.pyplot as plt
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px
 from datetime import date
 from pandas_datareader import data as pdr
 import matplotlib.pyplot as plt
-import squarify
 import yfinance as yf
 yf.pdr_override()
 from ta.volatility import BollingerBands
 from ta.trend import MACD
 from ta.momentum import RSIIndicator
+
+# Page Title 
+st.set_page_config(
+    page_title="Trading Web App")
 
 st.title("Trading Web App")
 
@@ -35,9 +36,6 @@ choice = st.sidebar.selectbox("Choose from",menu)
 st.sidebar.header("Choose Stock")
 # tickers = st.selectbox('Choose a stock from S&P500', ('CHKP', 'PANW', 'FTNT', 'PNGAY', 'TKC', 'AKAM', 'BEI'))
 ticker = st.sidebar.selectbox('Choose a stock from S&P500', load_data())
-stock = yf.Ticker(ticker)
-stockinfo = stock.info
-st.subheader(stockinfo['longName']) 
 
 st.sidebar.header("Select Date")
 #st.sidebar.subheader('Financials')
@@ -99,65 +97,66 @@ if choice == "Twitter":
     st.write('Twitter analysis option will be added soon! ')
     
 if choice == "Position Sizing Calculator":
-    st.header("Position Sizing Calculator")
     
     #Stock Price
     st.line_chart(stockpricedf['Close'])
     
-    #col1, col2 = st.beta_columns(2)
-    
     #Total Trading Capital
-    capital = st.number_input('Enter your total trading capital ($)', key = "capital")
+    st.subheader("1) Trading Capital")
+    capital = st.number_input('Enter your Total Trading Capital ($)', key = "capital")
     
     #Risk per Trade
-    riskptrade = st.slider('Choose your risk per Trade (%)', min_value=0, max_value=10, key = "riskptrade")
+    st.subheader("2) Risk per Trade")
+    riskptrade = st.slider('Choose your Risk per Trade (%)', min_value=0, max_value=10, key = "riskptrade")
     st.write('Your Risk per Trade ($) is', (capital*(riskptrade/100)))
     
     #Trade Entry Price
-    entryprice = st.number_input('Put in the entry price ($)', key = "entryprice", step=0.1)
+    st.subheader("3) Entry Price")
+    entryprice = st.number_input('Put in the Entry Price ($)', key = "entryprice", step=0.1)
     st.write('Current Stock Price ($)', stockpricedf['Close'].iloc[-1])
     
     #Risk per Share
+    st.subheader("4) Risk per Share")
     riskpshare = st.number_input('Enter your risk per share ($)', key = "riskpshare", step=0.1)
     
     #Risk-Reward Ratio
-    st.subheader('Risk-Reward Ratio')
+    st.subheader("5) Risk-Reward Ratio")
     riskreward = st.radio('Choose your Risk-Reward Ratio', ['1:2','1:3'])
-    
-    #Determination of #shares to buy 
-    st.subheader('Number of Shares and Position Size')
-    
-    if riskpshare == False:
-        st.write('Please Enter your Risk per Share')
-    else:
-        numberOfShares = ((capital*(riskptrade/100))/riskpshare)
-        st.write('Number of shares to buy:', numberOfShares)
-        positionsize = numberOfShares * entryprice
-        st.write('Your position size ($) for this trade is:', positionsize)
 
-        
-    #Determination of StopLoss & TakeProfit Limits
-    st.header('StopLoss & TakeProfit Limits ($)')
+    
+    #Determination of Stop Loss & Take Profit Limits
+    st.subheader('6) Calculation Stop Loss & Take Profit')
     stoploss = entryprice-riskpshare
-    st.write('Set Stop Loss at:', stoploss)
+    st.write('Set Stop Loss at ($):', stoploss)
     
     if riskreward == '1:2':
         ratio = 2
         takeprofit = entryprice+(ratio*riskpshare)
-        st.write('Set Take Profit at:', takeprofit)
+        st.write('Set Take Profit at ($):', takeprofit)
     elif riskreward == '1:3':
         ratio = 3
         takeprofit = entryprice+(ratio*riskpshare)
-        st.write('Set Take Profit at:', takeprofit)
+        st.write('Set Take Profit at ($):', takeprofit)
+    
+    # #Shares to buy & Positzion Size 
+    st.subheader("7) Determination Number of Shares to buy and Position Size")
+
+    if riskpshare == False:
+        st.write('Please Enter your Risk per Share first')
+    else:
+        numberOfShares = ((capital*(riskptrade/100))/riskpshare)
+        st.write('Number of Shares to buy:', numberOfShares)
+        positionsize = numberOfShares * entryprice
+        st.write('Your Position Size ($) for this trade is:', positionsize)
     
     st.write("""
     # Do you want to take this trade ?
     """)
     
     if st.button('Take Trade'):
-        st.success("You've successfully added the trade to the records")
         st.balloons()
-            
+        
+        
 elif choice == "About":
     st.info("Built with Streamlit by [Lifelonglearner](https://www.lifelonglearner.de/)")
     st.write("Inspired by [Adam Khoo](https://www.youtube.com/watch?v=pFHTccTf3QM&list=PLddKKXhQ4Wv9Qx2OeAdR7QQHmNbGJAs4n&index=1)")
